@@ -1,0 +1,23 @@
+;;; Write a function, called fold-left-right, that computes both fold-left and fold-right, returning them in a pair. Very
+;;; important: the implementation must be one-pass, for efficiency reasons, i.e. it must consider each element of the
+;;; input list only once; hence it is not correct to just call Scheme’s fold-left and -right.
+;;; Example: (fold-left-right string-append "" '("a" "b" "c")) is the pair ("cba" . "abc").
+
+#lang racket
+
+(define (fold-left-right f z l)
+    (define (help f l res)
+        (if (null? l)
+            res
+            (begin
+                (set! res [help f (cdr l) (cons (car res) (f (cdr res) (car l)))])
+                (cons (f (car res) (car l)) (cdr res))
+            )
+        )
+    )
+    (help f l (cons z z))
+)
+
+
+(fold-left-right string-append "" '("a" "b" "c" "d"))
+(fold-left-right cons '() '(1 2 3 4 5 6))
